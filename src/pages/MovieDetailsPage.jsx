@@ -1,24 +1,28 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { getMovieDetail, getMovieProviders } from "../services/tmdb";
-import { ArrowLeft, Star } from "lucide-react";
+import { ArrowLeft, LoaderCircle, Star } from "lucide-react";
 import formatCurrency from "../utils/formatCurrency";
 import formatDate from "../utils/formatDate";
+import ErrorLoadingPage from "./ErrorLoadingPage";
+import DetailLabel from "../components/DetailLabel";
 
 function MovieDetailsPage() {
   const [movieDetail, setMovieDetail] = useState(null);
   const [streamingProviders, setStreamingProviders] = useState(null);
   const [buyersProviders, setBuyersProviders] = useState(null);
   const [rentProviders, setRentProviders] = useState(null);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const navigate = useNavigate(); //put navigate -1, when back to previous page...
-  const [searchParams] = useSearchParams(); //to get the params brought by the url (task?title=newTitle)
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
 
   useEffect(() => {
     if (!id) return;
     async function loadDetail() {
       try {
+        setErrorMessage("");
         const detailMovie = await getMovieDetail(id);
         const movieProviders = await getMovieProviders(id);
         setMovieDetail(detailMovie);
@@ -28,6 +32,7 @@ function MovieDetailsPage() {
         setRentProviders(movieProviders.rent || []);
       } catch (err) {
         console.log(err);
+        setErrorMessage(err.message);
       }
     }
 
@@ -35,14 +40,22 @@ function MovieDetailsPage() {
   }, [id]);
 
   if (!id) {
-    return <p>ID do filme não encontrado.</p>;
+    return <ErrorLoadingPage errorMessage={"Movie not found"} />;
+  }
+  if (errorMessage) {
+    return <ErrorLoadingPage errorMessage={errorMessage} />;
   }
 
   if (!movieDetail) {
-    return <p>Carregando detalhes...</p>;
+    return (
+      <div className="flex flex-col gap-4 w-full h-dvh bg-[url(../../public/hero-bg.png)] items-center justify-center text-amber-50 text-4xl font-medium font-montserrat">
+        <p>Loading page...</p>
+        <LoaderCircle className="h-16 w-16 animate-spin "></LoaderCircle>
+      </div>
+    );
   }
 
-  //FAZER ESSA PAGINA RESPONSIVA... Titulos, tamanhos ... etc... padding talvez enfim...
+  //Ver se vale a pena criar componentes extras nesse codigo para diminuir o tamanho, mt dificil a leitura.
 
   return (
     <div className="flex flex-col gap-4 p-4 items-center bg-[url(../../public/hero-bg.png)]  text-slate-50">
@@ -70,60 +83,70 @@ function MovieDetailsPage() {
       </div>
       <h1 className="text-5xl font-bebas-neue">{movieDetail.title}</h1>
 
-      {/* flex-wrap oq e , pesquisar... */}
-
-      {/*
-
-      
-      md:grid-cols-[max-content_1fr] ->  \
-      O que cada parte significamd:: É um prefixo de responsividade. Indica que a regra só será aplicada em telas de tamanho médio (medium) ou superior (telas de tablet para cima, com largura mínima de 768px). Em telas menores, essa regra é ignorada.grid-cols-[...]: É a notação de valor arbitrário do Tailwind para a propriedade CSS grid-template-columns. Permite escrever regras personalizadas de colunas diretamente entre colchetes.max-content: É o valor da primeira coluna. Ele diz que a coluna deve ter exatamente o tamanho necessário para acomodar o seu conteúdo interno, sem quebrar linhas e sem ocupar espaço extra.1fr: É o valor da segunda coluna. A unidade fr significa "fração" (fraction). O 1fr indica que esta coluna vai ocupar todo o restante do espaço livre disponível no contêiner.  
-      */}
       <div className="grid w-full max-w-6xl grid-cols-1 gap-x-6 gap-y-4 font-dm-sans text-2xl md:grid-cols-[max-content_1fr] ">
-        {/* flex-wrap define se os itens flexíveis são forçados a ficarem na mesma linha ou se podem ser quebradas em varias linhas. Se o argumento for valido, ele define a direção em que as linhas são empilhadas. Nesse caso estou dizendo que
-        pode quebrar em varias linhas... Ou seja se tiver mais genres da linha, pode quebrar e jogar na proxima */}
-        <h2>Genres:</h2>
+        {/* flex-wrap define se os itens flexíveis são forçados a ficarem na mesma linha ou se podem ser quebradas em varias linhas. Se o argumento for valido, ele define a direção em que as linhas são empilhadas.*/}
+        <DetailLabel>Genres:</DetailLabel>
         <div className="flex flex-wrap gap-2">
           {movieDetail.genres.map((genre) => (
-            <span className="rounded-md bg-[#221F3D] px-4 py-2" key={genre.id}>
+            <span
+              className="rounded-md bg-[#221F3D] px-4 py-2 font-semibold"
+              key={genre.id}
+            >
               {genre.name}
             </span>
           ))}
         </div>
 
-        <h2>Overview:</h2>
+        <DetailLabel>Overview:</DetailLabel>
         <p className="max-w-6xl">{movieDetail.overview}</p>
 
-        <h2>Release Date:</h2>
-        <p>{formatDate(movieDetail.release_date)}</p>
+        <DetailLabel>Release Date:</DetailLabel>
+        <p className="text-[#D6C7FF] font-semibold">
+          {formatDate(movieDetail.release_date)}
+        </p>
 
-        <h2>Status:</h2>
-        <p>{movieDetail.status}</p>
+        <DetailLabel>Status:</DetailLabel>
+        <p className="text-[#D6C7FF] font-semibold">{movieDetail.status}</p>
 
-        <h2>Language:</h2>
+        <DetailLabel>Language:</DetailLabel>
         <div className="flex flex-wrap gap-2">
           {movieDetail.spoken_languages.map((language) => (
-            <span key={language.iso_639_1}>{language.name}</span>
+            <span
+              className="text-[#D6C7FF] font-semibold"
+              key={language.iso_639_1}
+            >
+              {language.name}
+            </span>
           ))}
         </div>
 
-        <h2>Budget:</h2>
-        <p>{formatCurrency(movieDetail.budget)}</p>
+        <DetailLabel>Budget:</DetailLabel>
+        <p className="text-[#D6C7FF] font-semibold">
+          {formatCurrency(movieDetail.budget)}
+        </p>
 
-        <h2>Revenue:</h2>
-        <p>{formatCurrency(movieDetail.revenue)}</p>
+        <DetailLabel>Revenue:</DetailLabel>
+        <p className="text-[#D6C7FF] font-semibold">
+          {formatCurrency(movieDetail.revenue)}
+        </p>
 
-        <h2>
-          Production <br /> Companies:
+        <h2 className="text-[#A8B5DB]">
+          Production
+          <br className="hidden md:block" /> Companies:
         </h2>
-        <div className="flex flex-wrap gap-2">
+
+        <div className="flex flex-wrap gap-2 text-[#D6C7FF] font-semibold">
           {movieDetail.production_companies.map((company) => (
-            <span key={company.id}>{company.name}</span>
+            <span className="text-[#D6C7FF] font-semibold" key={company.id}>
+              {company.name},{" "}
+            </span>
           ))}
         </div>
 
-        <h2>
-          Streaming <br /> Providers:
+        <h2 className="text-[#A8B5DB]">
+          Streaming <br className="hidden md:block" /> Providers:
         </h2>
+
         <div className="flex flex-wrap items-center gap-3">
           {streamingProviders.length > 0 ? (
             streamingProviders.map((provider) => (
@@ -136,13 +159,16 @@ function MovieDetailsPage() {
               />
             ))
           ) : (
-            <span>No streaming available</span>
+            <span className="text-[#D6C7FF] font-semibold">
+              No streaming available
+            </span>
           )}
         </div>
 
-        <h2>
-          Buy <br /> Providers:
+        <h2 className="text-[#A8B5DB]">
+          Buy <br className="hidden md:block" /> Providers:
         </h2>
+
         <div className="flex flex-wrap items-center gap-3">
           {buyersProviders.length > 0 ? (
             buyersProviders.map((provider) => (
@@ -155,14 +181,17 @@ function MovieDetailsPage() {
               />
             ))
           ) : (
-            <span>No buy available</span>
+            <span className="text-[#D6C7FF] font-semibold">
+              No buy available
+            </span>
           )}
         </div>
 
-        <h2>
-          Rent <br />
+        <h2 className="text-[#A8B5DB]">
+          Rent <br className="hidden md:block" />
           Providers:
         </h2>
+
         <div className="flex flex-wrap items-center gap-3">
           {rentProviders.length > 0 ? (
             rentProviders.map((provider) => (
@@ -175,7 +204,9 @@ function MovieDetailsPage() {
               />
             ))
           ) : (
-            <span>No rent available</span>
+            <span className="text-[#D6C7FF] font-semibold">
+              No rent available
+            </span>
           )}
         </div>
       </div>
