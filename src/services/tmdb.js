@@ -12,7 +12,11 @@ export async function getPopularMovies(pageNumber) {
   );
 
   if (!response.ok) {
-    throw new Error("Could not fetch popular movies");
+    //     {
+    //   "status_code": 7,
+    //   "status_message": "Invalid API key: You must be granted a valid key."
+    // }
+    throw new Error(response.status_message);
   }
 
   const data = await response.json();
@@ -29,7 +33,7 @@ export async function getMovieDetail(id) {
   });
 
   if (!response.ok) {
-    throw new Error("Could not fetch popular movies");
+    throw new Error("Could not fetch this movie, sorry for this");
   }
 
   const data = await response.json();
@@ -85,29 +89,29 @@ export async function getGenres() {
   });
 
   if (!response.ok) {
-    throw new Error("Could not fetch popular movies");
+    throw Error("Could not find genres of movies");
   }
 
   const data = await response.json();
   return data.genres;
 }
 
-export async function getLanguages() {
-  const response = await fetch(`${BASE_URL}/configuration/languages`, {
-    headers: {
-      Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
-      accept: "application/json",
-    },
-  });
+// export async function getLanguages() {
+//   const response = await fetch(`${BASE_URL}/configuration/languages`, {
+//     headers: {
+//       Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
+//       accept: "application/json",
+//     },
+//   });
 
-  if (!response.ok) {
-    throw new Error("Could not fetch popular movies");
-  }
+//   if (!response.ok) {
+//     throw new Error("Could not fetch languages of the movies");
+//   }
 
-  const data = await response.json();
-  data.sort((a, b) => a.english_name.localeCompare(b.english_name)); //ordenando list
-  return data;
-}
+//   const data = await response.json();
+//   data.sort((a, b) => a.english_name.localeCompare(b.english_name)); //ordenando list
+//   return data;
+// }
 
 export async function getMoviesByTitle(title, pageNumber) {
   const query = new URLSearchParams();
@@ -124,7 +128,7 @@ export async function getMoviesByTitle(title, pageNumber) {
   });
 
   if (!response.ok) {
-    throw new Error("Could not fetch popular movies");
+    throw new Error("Could not fetch movies by title");
   }
 
   const data = await response.json();
