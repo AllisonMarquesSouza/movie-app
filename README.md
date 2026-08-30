@@ -2,6 +2,10 @@
 
 A React application for searching movies, browsing popular titles, and viewing detailed information using the [TMDB API](https://www.themoviedb.org/).
 
+## Live Demo
+
+[Access the deployed application on Vercel](https://movie-app-alpha-rose-62.vercel.app/).
+
 ## Features
 
 - Display popular movies.
