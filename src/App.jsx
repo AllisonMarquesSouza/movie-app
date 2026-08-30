@@ -4,6 +4,7 @@ import Movie from "./components/Movie";
 import NextPage from "./components/NextPage";
 import ErrorLoadingPage from "./pages/ErrorLoadingPage";
 import { getGenres, getMoviesByTitle, getPopularMovies } from "./services/tmdb";
+import heroBg from "./assets/hero-bg.png";
 
 function App() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -51,7 +52,10 @@ function App() {
         <ErrorLoadingPage errorMessage={errorMessage} />
       ) : (
         <div>
-          <div className="flex flex-col items-center gap-10 pt-16 px-4 min-h-dvh  bg-[url(../../public/hero-bg.png)] text-center lg:text-left text-slate-50">
+          <div
+            className="flex flex-col items-center gap-10 pt-16 px-4 min-h-dvh text-center lg:text-left text-slate-50"
+            style={{ backgroundImage: `url(${heroBg})` }}
+          >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bebas-neue">
               Find Movies You'll Love Without the Hassle
             </h1>

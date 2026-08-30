@@ -12,6 +12,8 @@ export default function CountryFilter({ setMovies }) {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [countries, setCountries] = useState([]);
 
+  //Tratar erros e jogar para pagina de erro.
+
   async function loadMoviesByCountry(country) {
     const movies = await discoverMoviesByCountry(country);
     setMovies(movies);

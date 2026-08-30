@@ -6,6 +6,7 @@ import formatCurrency from "../utils/formatCurrency";
 import formatDate from "../utils/formatDate";
 import ErrorLoadingPage from "./ErrorLoadingPage";
 import DetailLabel from "../components/DetailLabel";
+import heroBg from "../assets/hero-bg.png";
 
 function MovieDetailsPage() {
   const [movieDetail, setMovieDetail] = useState(null);
@@ -48,7 +49,10 @@ function MovieDetailsPage() {
 
   if (!movieDetail) {
     return (
-      <div className="flex flex-col gap-4 w-full h-dvh bg-[url(../../public/hero-bg.png)] items-center justify-center text-amber-50 text-4xl font-medium font-montserrat">
+      <div
+        className="flex flex-col gap-4 w-full h-dvh items-center justify-center text-amber-50 text-4xl font-medium font-montserrat"
+        style={{ backgroundImage: `url(${heroBg})` }}
+      >
         <p>Loading page...</p>
         <LoaderCircle className="h-16 w-16 animate-spin "></LoaderCircle>
       </div>
@@ -58,7 +62,10 @@ function MovieDetailsPage() {
   //Ver se vale a pena criar componentes extras nesse codigo para diminuir o tamanho, mt dificil a leitura.
 
   return (
-    <div className="flex flex-col gap-4 p-4 items-center bg-[url(../../public/hero-bg.png)]  text-slate-50">
+    <div
+      className="flex flex-col gap-4 p-4 items-center text-slate-50"
+      style={{ backgroundImage: `url(${heroBg})` }}
+    >
       <div className="flex w-full justify-start">
         <button
           onClick={() => navigate(-1)}

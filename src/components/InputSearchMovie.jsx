@@ -8,13 +8,6 @@ import LanguageFilter from "./LanguageFilter";
 function InputSearchMovie({ setTitle, setPageNumber, genres, setMovies }) {
   const [filterStatus, setFilterStatus] = useState(false);
 
-  //MAKE IT RESPONSIVE ...
-
-  /*
-  min-h-dvh = “a página nunca será menor que a tela”
-  max-w-xl  = “o conteúdo não vai ficar largo demais no desktop”
-  w-full    = “no celular, ocupe a largura disponível”  
-  */
   return (
     <div className="flex flex-col-reverse items-center w-64 gap-2 md:flex-row md:w-full md:justify-center">
       <div className="flex gap-2">
