@@ -58,6 +58,8 @@ function App() {
             <InputSearchMovie
               setTitle={setTitle}
               setPageNumber={setPageNumber}
+              genres={genres}
+              setMovies={setMovies}
             />
             {!title.trim() && (
               <h2 className="text-left text-4xl md:text-5xl lg:text-6xl font-bebas-neue">

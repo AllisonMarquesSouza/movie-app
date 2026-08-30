@@ -40,6 +40,83 @@ export async function getMovieDetail(id) {
 
   return data;
 }
+export async function discoverMoviesByReleaseYear(releaseYear) {
+  const response = await fetch(
+    `${BASE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&primary_release_year=${releaseYear}&sort_by=popularity.desc`,
+    {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
+        accept: "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Could not fetch this movie, sorry for this");
+  }
+
+  const data = await response.json();
+
+  return data.results;
+}
+export async function discoverMoviesByGenre(genre) {
+  const response = await fetch(
+    `${BASE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&sort_by=popularity.desc&with_genres=${genre}`,
+    {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
+        accept: "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Could not fetch this movie, sorry for this");
+  }
+
+  const data = await response.json();
+
+  return data.results;
+}
+export async function discoverMoviesByLanguage(language) {
+  const response = await fetch(
+    `${BASE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&with_original_language=${language}&sort_by=popularity.desc`,
+    {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
+        accept: "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Could not fetch this movie, sorry for this");
+  }
+
+  const data = await response.json();
+
+  return data.results;
+}
+export async function discoverMoviesByCountry(country) {
+  const response = await fetch(
+    `${BASE_URL}/discover/movie?include_adult=false&include_video=false&language=en-US&page=1&with_origin_country=${country}&sort_by=popularity.desc`,
+    {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
+        accept: "application/json",
+      },
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error("Could not fetch this movie, sorry for this");
+  }
+
+  const data = await response.json();
+
+  return data.results;
+}
+
 export async function getMovieProviders(id) {
   const response = await fetch(`${BASE_URL}/movie/${id}/watch/providers`, {
     headers: {
@@ -96,22 +173,41 @@ export async function getGenres() {
   return data.genres;
 }
 
-// export async function getLanguages() {
-//   const response = await fetch(`${BASE_URL}/configuration/languages`, {
-//     headers: {
-//       Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
-//       accept: "application/json",
-//     },
-//   });
+export async function getCountries() {
+  const response = await fetch(
+    `${BASE_URL}/configuration/countries?language=en-US`,
+    {
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
+        accept: "application/json",
+      },
+    },
+  );
 
-//   if (!response.ok) {
-//     throw new Error("Could not fetch languages of the movies");
-//   }
+  if (!response.ok) {
+    throw Error("Could not find countries of movies");
+  }
 
-//   const data = await response.json();
-//   data.sort((a, b) => a.english_name.localeCompare(b.english_name)); //ordenando list
-//   return data;
-// }
+  const data = await response.json();
+  return data;
+}
+
+export async function getLanguages() {
+  const response = await fetch(`${BASE_URL}/configuration/languages`, {
+    headers: {
+      Authorization: `Bearer ${import.meta.env.VITE_TMDB_ACCESS_TOKEN}`,
+      accept: "application/json",
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Could not fetch languages of the movies");
+  }
+
+  const data = await response.json();
+  data.sort((a, b) => a.english_name.localeCompare(b.english_name)); //ordenando list
+  return data;
+}
 
 export async function getMoviesByTitle(title, pageNumber) {
   const query = new URLSearchParams();
