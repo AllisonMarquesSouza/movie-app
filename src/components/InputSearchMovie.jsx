@@ -4,16 +4,27 @@ import GenreFilter from "./GenreFilter";
 import YearFilter from "./YearFilter";
 import CountryFilter from "./CountryFilter";
 import LanguageFilter from "./LanguageFilter";
+import { getPopularMovies } from "../services/tmdb";
 
 function InputSearchMovie({ setTitle, setPageNumber, genres, setMovies }) {
   const [filterStatus, setFilterStatus] = useState(false);
+
+  const handleFilterStatus = async () => {
+    const nextStatus = !filterStatus;
+
+    setFilterStatus(nextStatus);
+    if (!nextStatus) {
+      const popularMovies = await getPopularMovies(1);
+      setMovies(popularMovies);
+    }
+  };
 
   return (
     <div className="flex flex-col-reverse items-center w-64 gap-2 md:flex-row md:w-full md:justify-center">
       <div className="flex gap-2">
         <button
           className="flex gap-2 p-3 rounded-full bg-slate-900 hover:cursor-pointer transition hover:bg-slate-600"
-          onClick={() => setFilterStatus(!filterStatus)}
+          onClick={handleFilterStatus}
         >
           <FilterIcon />
           <h2>Filter</h2>
