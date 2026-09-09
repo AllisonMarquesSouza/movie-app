@@ -1,10 +1,12 @@
+import { Menu } from "lucide-react";
 import { useEffect, useState } from "react";
+import heroBg from "./assets/hero-bg.png";
 import InputSearchMovie from "./components/InputSearchMovie";
+import MenuActive from "./components/MenuActive";
 import Movie from "./components/Movie";
 import NextPage from "./components/NextPage";
 import ErrorLoadingPage from "./pages/ErrorLoadingPage";
 import { getGenres, getMoviesByTitle, getPopularMovies } from "./services/tmdb";
-import heroBg from "./assets/hero-bg.png";
 
 function App() {
   const [pageNumber, setPageNumber] = useState(1);
@@ -12,6 +14,7 @@ function App() {
 
   const [movies, setMovies] = useState([]);
   const [genres, setGenres] = useState([]);
+  const [activeMenu, setActiveMenu] = useState(false);
 
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -51,12 +54,25 @@ function App() {
       {errorMessage ? (
         <ErrorLoadingPage errorMessage={errorMessage} />
       ) : (
-        <div>
+        <div className="relative">
+          <div className="absolute top-4 left-4 z-10 flex flex-col gap-2">
+            <button
+              type="button"
+              className="flex gap-2 p-3 rounded-full text-slate-50 bg-slate-900 hover:cursor-pointer transition hover:bg-slate-600"
+              onClick={() => setActiveMenu(!activeMenu)}
+            >
+              <Menu />
+              <h2>Menu</h2>
+            </button>
+
+            {activeMenu && <MenuActive />}
+          </div>
+
           <div
             className="flex flex-col items-center gap-10 pt-16 px-4 min-h-dvh text-center lg:text-left text-slate-50"
             style={{ backgroundImage: `url(${heroBg})` }}
           >
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bebas-neue">
+            <h1 className="text-3xl mt-4 md:text-4xl lg:text-6xl font-bebas-neue">
               Find Movies You'll Love Without the Hassle
             </h1>
             <InputSearchMovie
@@ -81,8 +97,3 @@ function App() {
 }
 
 export default App;
-
-//check later...
-//Little windows to show when searching for movies... like options, instead of updating the whole page...
-//Make the search page, after you type, you can click in the icon to search. check examples for that. (I need the little window to let it shows good)
-//make page go to the top of it, after the loading of another page...
