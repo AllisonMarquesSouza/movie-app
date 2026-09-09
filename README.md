@@ -4,7 +4,7 @@ A React application for searching movies, browsing popular titles, and viewing d
 
 ## Live Demo
 
-[Access the deployed application on Vercel](https://movie-app-alpha-rose-62.vercel.app/).
+[Access the deployed application in my own website](https://movies.allisonmarques.com/).
 
 ## Features
 
