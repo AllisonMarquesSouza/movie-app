@@ -9,7 +9,7 @@ function Movie({ movies, genres }) {
   }
 
   return (
-    <ul className="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-5">
+    <ul className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
       {movies.map((movie) => (
         <li
           key={movie.id}
